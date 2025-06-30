@@ -1,45 +1,7 @@
 
 // styles globlas
 :root {
-    /* Colors primarys */
-    --primary:  #0D003D;
-
-    /* Colors secondarys */
-    --secondary: #1758FF;
-
-    /* Colors tertiarys */
-    --tertiary-blue-01: #E2F0FD; // filter
-    --tertiary-blue-02: #F6FCFF; // row
-    --tertiary-blue-03: #15005f;
-    --tertiary-blue-04: #2663fd;
-    --tertiary-blue-05: #D4E0FF; // toggle
-    --tertiary-blue-06: #5D8BFF;
-    --tertiary-blue-07: #A7C8E0;
-
-    /* Colors grays */
-    --gray10: #E5E9EC;
-    --gray20: #F6F7F8;
-    --gray30: #AAB5BE;
-    --gray40: #768997;
-    --gray50: #CCD2D8;
-    --gray60: #edf0f2;
-
-    /* Colors neutral or binary */
-    --white: #ffffff;
-    --dark: #000000;
-
-    /* Colors alerts */
-    --info:#6098EC;
-    --info-background: #E5F0FF;
-
-    --danger: #F5004B;
-    --danger-background: #FFC0D0;
-
-    --success: #02AC7E;
-    --success-background: #C3FFDA;
-
-    --warning: #CD8905;
-    --warning-background: #FFF2C2;
+    --background-color: #F6F7F8;
 }
 
 /* Media query para pantallas pequeñas (hasta 640px) */

@@ -24,6 +24,11 @@ export class LayoutComponent implements OnInit {
     this.onTabChange(activeIndex);
   }
 
+  /**
+ * Maneja el cambio de pestaña (tab) y redirige a la ruta correspondiente.
+ *
+ * @param index Índice de la pestaña seleccionada
+ */
   onTabChange(index: number): void {
     this.selectedTabIndex = index;
     this.router.navigate([`/${this.router.config[0].children?.[index].path}`]);

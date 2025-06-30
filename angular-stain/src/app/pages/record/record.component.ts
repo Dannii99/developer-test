@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { LastResult, ResultRow } from '@core/models/result.interface';
+import { ResultRow } from '@core/models/result.interface';
 import { MatTableModule } from '@angular/material/table';
 import { NumerosPipe } from '@core/utils/pipes/numeros.pipe';
 import { faBullseye, faClock, faRulerCombined, faSquareRootAlt, faTable, faTint } from '@fortawesome/free-solid-svg-icons';
@@ -23,10 +23,8 @@ export default class RecordComponent implements OnInit {
   faTint = faTint;
   faSquareRootAlt = faSquareRootAlt;
 
-  resultHistory: any[] = [
-      {date: new Date(), points: 12, onStain: 1.0079, area: 21 },
-  ];
-  displayedColumns = ['date', 'points', 'totalArea', 'onStain', 'areaEstimated'];
+  resultHistory: ResultRow[] = [];
+  displayedColumns = ['date', 'points', 'totalArea', 'onStain', 'areaEstimated'];  // Columnas visibles en la tabla de resultados
 
   constructor() {
     document.body.classList.add('overflow-hidden');
@@ -36,13 +34,14 @@ export default class RecordComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // almacenar historial para mostrar en tabla
     const saved = localStorage.getItem('historial');
     if (saved) {
       this.resultHistory = saved ? JSON.parse(saved, this.dateReviver) : [];
-      console.log('resultHistory:: ', this.resultHistory);
     }
   }
 
+  // Revive las fechas del historial al convertirlas de string a tipo Date.
   private dateReviver(key: string, value: any) {
     if (key === 'date') {
       return new Date(value);

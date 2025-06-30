@@ -44,11 +44,10 @@ $angular-stain-theme: mat.define-theme((
 
 // styles
 @import "assets/styles/global.scss";
-@import "assets/styles/_modals.scss";
 
 
 html, body { height: 100%;   font-size: 16px; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; background-color: var(--gray20); }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; background-color: var(--background-color); }
 
 * {
     font-variant: normal !important;

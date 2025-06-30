@@ -13,13 +13,17 @@ import { faCheck, faCircle } from '@fortawesome/free-solid-svg-icons';
 })
 export class StepperComponent {
 
-  @Input() steps: { label: string; done: boolean }[] = [];
-  @Input() currentStepIndex = 0;
+  @Input() steps: { label: string; done: boolean }[] = []; //Lista de pasos del stepper.
+  @Input() currentStepIndex = 0; //Índice actual del paso activo en el stepper.
 
+  // Icons
   faCheck: IconDefinition = faCheck;
   faCircle: IconDefinition = faCircle;
 
-
+/**
+ * Marca el paso actual como completado y avanza al siguiente paso.
+ *
+ */
   avanzarPaso() {
     if (this.currentStepIndex < this.steps.length) {
       this.steps[this.currentStepIndex].done = true;
@@ -27,6 +31,12 @@ export class StepperComponent {
     }
   }
 
+  /**
+ * Establece manualmente el paso actual y actualiza los pasos como completados
+ * si están antes del índice seleccionado.
+ *
+ * @param index Índice del paso que se desea establecer como actual
+ */
   setPaso(index: number) {
     this.steps = this.steps.map((step, i) => ({
       ...step,

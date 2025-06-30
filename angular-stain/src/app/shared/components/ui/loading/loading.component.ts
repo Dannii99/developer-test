@@ -10,17 +10,14 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 })
 export class LoadingComponent implements OnInit, OnDestroy {
 
-  @Input() visible: boolean = false;
-  @Input() message: string = 'Cargando..';
+  @Input() visible: boolean = false; // mostrar cargamndo
+  @Input() message: string = 'Cargando..'; // mensaje controlado
 
   ngOnInit(): void {
-    console.log('CONTRUIR');
-
     document.body.classList.add('overflow-hidden');
   }
 
   ngOnDestroy(): void {
-    console.log('DESTRUIR');
     document.body.classList.remove('overflow-hidden');
   }
 

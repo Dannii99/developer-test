@@ -8,3 +8,4 @@ export interface LastResult {
 export interface ResultRow extends LastResult {
   date: Date;
 };
+
