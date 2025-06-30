@@ -49,4 +49,10 @@ export default class RecordComponent implements OnInit {
     return value;
   }
 
+  // limpiar tabla
+  clearHistory(): void {
+    localStorage.removeItem('historial');
+    this.resultHistory = [];
+  }
+
 }
