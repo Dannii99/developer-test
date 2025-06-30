@@ -1,28 +1,7 @@
-<main class="p-4 md:p-6 lg:p-8 h-[calc(100vh-10.0625rem)] overflow-auto">
-
-  <button mat-button class="mb-4" (click)="showSteps = !showSteps">
-    Ver pasos del método
-  </button>
-
-  @if (showSteps) {
-    <div class="space-y-4 border rounded-lg p-4 bg-gray-50 shadow mb-4">
-      <div>
-        <strong>Paso 1:</strong> Subir una imagen binaria (blanco y negro)
-      </div>
-      <div>
-        <strong>Paso 2:</strong> Validar si la imagen es binaria
-      </div>
-      <div>
-        <strong>Paso 3:</strong> Generar puntos aleatorios sobre la imagen
-      </div>
-      <div>
-        <strong>Paso 4:</strong> Contar cuántos caen sobre la mancha
-      </div>
-      <div>
-        <strong>Paso 5:</strong> Estimar el área con la fórmula de Monte Carlo
-      </div>
-    </div>
-  }
+<main class="px-4 md:px-6 lg:px-8 pb-8 pt-4 h-[calc(100vh-10.0625rem)] overflow-auto">
+  <section class="mb-6">
+    <stepper [steps]="steps" [currentStepIndex]="0" />
+  </section>
 
   <section class="grid gap-6 grid-cols-1 md:grid-cols-2 mb-6">
     <div class="w-full h-[35rem] overflow-hidden flex flex-col items-center border border-gray-300 rounded-2xl shadow-sm relative cursor-pointer hover:shadow-md transition"
@@ -33,7 +12,7 @@
         <canvas #canvas class="hidden"></canvas>
 
         @if (imagePreviewUrl) {
-          <img [src]="imagePreviewUrl" alt="Preview" class="w-full h-full object-contain object-center" />
+          <img [src]="imagePreviewUrl" alt="Preview" class="w-full h-full object-contain object-center" [class.blur-sm]="isBlur" />
         } @else {
           <div class="flex flex-col items-center text-center text-gray-500">
             <fa-icon [icon]="faEyeSlash" class="text-6xl mb-2"/>
@@ -85,7 +64,7 @@
   </section>
 
   <section class="grid gap-6 grid-cols-1 md:grid-cols-2">
-     <div class="bg-white rounded-xl shadow-md p-6 mb-4 border border-gray-200 w-full mx-auto">
+     <div class="bg-white rounded-xl shadow-md p-6 mb-4 border border-gray-200 w-full mx-auto flex flex-col justify-center">
       <div class="mt-8">
         <label for="pointsSlider" class="font-semibold text-gray-700 mb-2 flex items-center gap-2">
           <fa-icon [icon]="faBullseye" class="text-blue-600"></fa-icon>
@@ -112,15 +91,7 @@
          Calcular área
        </button>
      </div>
-     <div *ngIf="lastResult" class="mt-8 text-sm space-y-2 text-gray-800">
-       <p><fa-icon [icon]="faHashtag" class="text-gray-500 mr-2"></fa-icon> <strong>Total de puntos:</strong> {{ lastResult.totalPoints | numeros }}</p>
-       <p><fa-icon [icon]="faCheckCircle" class="text-green-600 mr-2"></fa-icon> <strong>Puntos sobre la mancha:</strong> {{ lastResult.pointsOnStain | numeros }}</p>
-       <p><fa-icon [icon]="faRulerCombined" class="text-gray-600 mr-2"></fa-icon> <strong>Área de la imagen:</strong> {{ lastResult.totalArea | numeros }} px²</p>
-       <p class="font-bold text-blue-700 text-base">
-         <fa-icon [icon]="faChartArea" class="mr-2"></fa-icon>
-         Área estimada de la mancha: {{ lastResult.estimatedStainArea | numeros }} px²
-       </p>
-     </div>
+
     </div>
 
     <div class="bg-white rounded-xl shadow-md p-6 mb-4 border border-gray-200 w-full mx-auto">
@@ -138,6 +109,15 @@
           <span class="inline-block bg-gray-100 text-center text-gray-800 font-mono px-3 py-2 rounded">
             Área estimada = Área total × (n<sub>i</sub> / n)
           </span>
+        </p>
+      </div>
+      <div *ngIf="lastResult" class="mt-8 text-sm space-y-2 text-gray-800">
+        <p><fa-icon [icon]="faHashtag" class="text-gray-500 mr-2"></fa-icon> <strong>Total de puntos:</strong> {{ lastResult.totalPoints | numeros }}</p>
+        <p><fa-icon [icon]="faCheckCircle" class="text-green-600 mr-2"></fa-icon> <strong>Puntos sobre la mancha:</strong> {{ lastResult.pointsOnStain | numeros }}</p>
+        <p><fa-icon [icon]="faRulerCombined" class="text-gray-600 mr-2"></fa-icon> <strong>Área de la imagen:</strong> {{ lastResult.totalArea | numeros }} px²</p>
+        <p class="font-bold text-blue-700 text-base">
+          <fa-icon [icon]="faChartArea" class="mr-2"></fa-icon>
+          Área estimada de la mancha: {{ lastResult.estimatedStainArea | numeros }} px²
         </p>
       </div>
     </div>

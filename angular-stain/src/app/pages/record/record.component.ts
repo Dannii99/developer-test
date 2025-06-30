@@ -28,6 +28,13 @@ export default class RecordComponent implements OnInit {
   ];
   displayedColumns = ['date', 'points', 'totalArea', 'onStain', 'areaEstimated'];
 
+  constructor() {
+    document.body.classList.add('overflow-hidden');
+    setTimeout(() => {
+      document.body.classList.remove('overflow-hidden');
+    }, 500);
+  }
+
   ngOnInit(): void {
     const saved = localStorage.getItem('historial');
     if (saved) {

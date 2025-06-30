@@ -5,14 +5,17 @@ import { faBullseye, faCalculator, faChartArea, faCheckCircle, faDraftingCompass
 import {MatButtonModule} from '@angular/material/button';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NumerosPipe } from '@core/utils/pipes/numeros.pipe';
-import { LastResult, ResultRow } from '@core/models/result.interface';
+import { ResultRow } from '@core/models/result.interface';
 import { LoadingComponent } from '@shared/components/ui/loading/loading.component';
-
+import { ModalService } from '@core/services/modal.service';
+import { AlertDialogComponent } from '@shared/components/ui/alert-dialog/alert-dialog.component';
+import { Dialog } from '@core/models/dialog.interface';
+import { StepperComponent } from '@shared/components/ui/stepper/stepper.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, FontAwesomeModule, MatButtonModule, ReactiveFormsModule, FormsModule, NumerosPipe, LoadingComponent],
+  imports: [CommonModule, FontAwesomeModule, MatButtonModule, ReactiveFormsModule, FormsModule, NumerosPipe, LoadingComponent, StepperComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
@@ -21,6 +24,8 @@ export default class HomeComponent {
   @ViewChild('canvas', { static: false }) canvas!: ElementRef<HTMLCanvasElement>;
 
   @ViewChild('pointsCanvas', { static: false }) pointsCanvas!: ElementRef<HTMLCanvasElement>;
+
+  @ViewChild(StepperComponent) stepper!: StepperComponent;
 
   //ICONS
   faEyeSlash = faEyeSlash;
@@ -50,16 +55,39 @@ export default class HomeComponent {
   isLoading = false;
   loadingMessage = '';
 
+  isBlur: boolean = true;
+
+  steps = [
+    { label: 'Subir imagen', done: false },
+    { label: 'Validar imagen', done: false },
+    { label: 'Generar puntos', done: false },
+    { label: 'Contar puntos en mancha', done: false },
+    { label: 'Estimar área', done: false },
+  ];
+
+
+  constructor( private modalservice: ModalService) {
+    document.body.classList.add('overflow-hidden');
+    setTimeout(() => {
+      document.body.classList.remove('overflow-hidden');
+    }, 500);
+  }
 
   /* CREAR Y VALIDAR IMAGEN */
-
+  /* Paso 1: subir una imagen binaria y mostrarla en un visor en la vista */
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (!input.files?.length) return;
 
+    // Paso 0
+    this.lastResult = null;
+    this.stepper.setPaso(0);
+    this.isBlur = true;
+
     const file = input.files[0];
     const img = new Image();
     const reader = new FileReader();
+
 
     reader.onload = () => {
       img.src = reader.result as string;
@@ -76,31 +104,36 @@ export default class HomeComponent {
       const imageData = ctx.getImageData(0, 0, img.width, img.height);
       const pixels = imageData.data;
 
+      // ✅ Validar si es imagen binaria
       this.isBinary = this.validateBinaryImage(pixels);
-      if (this.isBinary) {
-        this.imagePreviewUrl = reader.result as string;
+      if (!this.isBinary) {
+          this.imagePreviewUrl = null;
+          this.lastResult = null;
+          ctx.clearRect(0, 0, canvasEl.width, canvasEl.height);
+          this.showToast();
+        return
       }
-  // ✅ Validar si es imagen binaria
-    this.isBinary = this.validateBinaryImage(pixels);
 
-    // Mostrar preview si es válida
-    if (this.isBinary) {
       this.imagePreviewUrl = reader.result as string;
-    }
 
-    // ✅ Mostrar el toast flotante por 4 segundos
-    this.showBinaryToast = true;
-    clearTimeout(this.toastTimeout);
-    this.toastTimeout = setTimeout(() => {
-      this.showBinaryToast = false;
-    }, 4000);
+
+      setTimeout(() => {
+        // ✅ Mostrar el toast flotante por 4 segundos
+        this.showToast();
+        this.isBlur = false;
+        // Paso 2
+        this.stepper.setPaso(2);
+      }, 1000);
+
+
+      // Paso 1
+      this.stepper.setPaso(1);
     };
 
     reader.readAsDataURL(file);
-
-
   }
 
+  /* Paso 2: validar si la imagen es vinaria */
   validateBinaryImage(pixels: Uint8ClampedArray): boolean {
     for (let i = 0; i < pixels.length; i += 4) {
       const [r, g, b, a] = [pixels[i], pixels[i + 1], pixels[i + 2], pixels[i + 3]];
@@ -117,9 +150,16 @@ export default class HomeComponent {
     return true;
   }
 
+  showToast(): void {
+    this.showBinaryToast = true;
+    clearTimeout(this.toastTimeout);
+    this.toastTimeout = setTimeout(() => {
+      this.showBinaryToast = false;
+    }, 4000);
+  }
 
   /* GENERAR PUNTOS */
-  /* Paso 1: Generar n puntos aleatorios dentro del canvas */
+  /* Paso 3: Generar n puntos aleatorios dentro del canvas */
   generateRandomPoints(n: number, width: number, height: number): { x: number; y: number }[] {
     const points = [];
 
@@ -133,7 +173,7 @@ export default class HomeComponent {
   }
 
   /* VERIFICAR PUNTOS */
-  /* Paso 2: Verificar si un punto está sobre la mancha (píxel blanco) */
+  /* Paso 4: Verificar si un punto está sobre la mancha (píxel blanco) */
   isPointOnStain(x: number, y: number, ctx: CanvasRenderingContext2D): boolean {
     const pixel = ctx.getImageData(x, y, 1, 1).data;
     const [r, g, b] = pixel;
@@ -144,12 +184,24 @@ export default class HomeComponent {
 
 
   /* CALCULAR AREA ESTIMADA */
-  /* Paso 3: Calcular el área estimada */
+  /* Paso 5: Calcular el área estimada */
   calculateStainArea(n: number): void {
+
+    if (!this.imagePreviewUrl) {
+      const data: Dialog = {
+        data: {
+          title: 'Alerta',
+          message: 'Primero debes cargar una imagen binaria para poder calcular el área estimada'
+        },
+        width: '31.25rem',
+        disableClose: true,
+      }
+      this.modalservice.open(AlertDialogComponent, data).afterClosed().subscribe(result => {});
+      return
+    }
 
     this.isLoading = true;
     this.loadingMessage = 'Verificando imagen…';
-
     setTimeout(() => {
         this.loadingMessage = 'Calculando puntos…';
 
@@ -215,8 +267,14 @@ export default class HomeComponent {
             this.isLoading = false;
              // Cerrar pasos si estaban abiertos
             this.showSteps = false;
+            // Paso 5
+            this.stepper.setPaso(5);
           }, 800);
+          // Paso 4
+          this.stepper.setPaso(4);
         }, 1000);
+        // Paso 3
+        this.stepper.setPaso(3);
     }, 1000);
   }
 

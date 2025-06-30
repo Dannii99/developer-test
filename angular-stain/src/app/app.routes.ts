@@ -2,8 +2,6 @@ import { Routes } from '@angular/router';
 import { LayoutComponent } from '@shared/components/layout/layout.component';
 
 export const routes: Routes = [
-
-
   {
     path: '',
     title: '',
@@ -18,6 +16,11 @@ export const routes: Routes = [
         path: 'record',
         title: 'Record',
         loadChildren: () => import('./pages/record/record.routes').then((m) => m.routes)
+      },
+      {
+        path: '**',
+        redirectTo: '/home',
+        pathMatch: 'full',
       },
     ]
   },
