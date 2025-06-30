@@ -1,3 +1,5 @@
+# PUNTO 4  Create Angular App 
+
 # Proyecto de prueba técnica - Módulo Angular
 
 Este proyecto contiene el desarrollo de una aplicación Angular como parte de la prueba técnica.
@@ -24,6 +26,10 @@ Una vez instaladas las dependencias, ejecuta el proyecto localmente con:
 ng serve 
 
 EJ server host: http://localhost:4200
+
+## tabien pueden visualizar el protecto desde este host de git
+
+server host: https://dannii99.github.io/developer-test/#/home
 
 NOTA:
 
