@@ -20,7 +20,7 @@
     <div class="w-full h-[35rem] overflow-hidden flex flex-col items-center border border-gray-300 rounded-2xl shadow-sm relative cursor-pointer hover:shadow-md transition"
         [class.p-4]="!imagePreviewUrl" (click)="inputFile.click()">
       <div class="flex-1 w-full h-full flex justify-center items-center">
-        <input #inputFile type="file" class="hidden" accept="image/*" (change)="onFileSelected($event)" />
+        <input #inputFile type="file" class="hidden" accept="image/png" (change)="onFileSelected($event)" />
         <canvas #canvas class="hidden"></canvas>
         @if (imagePreviewUrl) {
           <img [src]="imagePreviewUrl" alt="Preview" class="w-full h-full object-contain object-center" [class.blur-sm]="imageSignalStateService.isBlur()" />
