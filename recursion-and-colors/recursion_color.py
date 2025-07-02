@@ -82,7 +82,7 @@ def juego_torres(discos):
     try:
         hanoi(len(discos), "A", "C", "B")
     except:
-        print("\nResultado: -1")
+        print("\nResultado: -1  # Impossible to complete the transfer ")
         return -1
 
     # Mostrar movimientos realizados
