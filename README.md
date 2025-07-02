@@ -1,5 +1,8 @@
 # PUNTO 1  Recursion and Colors
+Este proyecto resuelve una variante del clásico problema de las Torres de Hanoi utilizando recursión.
+
 ## Ubica el archivo Python
+Asegúrate de estar dentro del directorio del ejercicio
 Ubica el archivo .py correspondiente dentro del repositorio:
 
 ```bash
@@ -8,7 +11,7 @@ Ubica el archivo .py correspondiente dentro del repositorio:
 ```
 
 ## Ejecutar el archivo Python
-
+El archivo principal del proyecto es recursion_color.py. Para correrlo:
 ```bash
     python recursion_color.py
 
