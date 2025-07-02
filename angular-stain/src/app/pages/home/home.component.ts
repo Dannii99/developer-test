@@ -100,6 +100,9 @@ export default class HomeComponent {
       canvasEl.width = result.width;
       canvasEl.height = result.height;
 
+
+
+
       this.isBinary = result.isBinary;
 
       // Si no es binaria, limpiar la vista y mostrar mensaje
@@ -113,7 +116,11 @@ export default class HomeComponent {
 
       // Dibujar la imagen analizada en el canvas
       ctx.putImageData(result.imageData!, 0, 0);
+       console.log('ctx:: ', ctx);
+       console.log('imageData:: ', result.imageData);
       this.imagePreviewUrl = result.imagePreviewUrl;
+      console.log('imagePreviewUrl:: ', this.imagePreviewUrl);
+
 
       // Mostrar toast con mensaje y avanzar paso
       setTimeout(() => {
